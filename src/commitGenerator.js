@@ -1,3 +1,6 @@
+const { generateDateRange } = require('./utils/dateUtils');
+const { randomBytes } = require('crypto');
+
 class CommitGenerator {
     constructor(simpleGit) {
         this.git = simpleGit;
@@ -10,21 +13,19 @@ class CommitGenerator {
 
     generateCommitDates(startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances) {
         const dates = [];
-        let currentDate = new Date(startDate);
+        const dateRange = generateDateRange(startDate, endDate);
 
-        while (currentDate <= new Date(endDate)) {
-            const day = currentDate.getDay();
+        dateRange.forEach(date => {
+            const day = date.getDay();
             const chance = commitChances[day];
 
             if (Math.random() * 100 < chance) {
                 const numCommits = Math.floor(Math.random() * (maxCommitsPerDay - minCommitsPerDay + 1)) + minCommitsPerDay;
                 for (let i = 0; i < numCommits; i++) {
-                    dates.push(new Date(currentDate));
+                    dates.push(new Date(date));
                 }
             }
-
-            currentDate.setDate(currentDate.getDate() + 1);
-        }
+        });
 
         return dates;
     }
@@ -32,7 +33,8 @@ class CommitGenerator {
     async createCommits(branchName, commitDates, commitMessage) {
         await this.git.checkout(branchName);
         for (const date of commitDates) {
-            await this.git.commit(commitMessage, {
+            const randomMessage = commitMessage + ' ' + randomBytes(4).toString('hex');
+            await this.git.commit(randomMessage, {
                 '--date': date.toISOString()
             });
         }

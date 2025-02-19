@@ -43,6 +43,13 @@ commit-generator-app
    ```
 3. Follow the prompts to enter the branch name, date range, commit frequency, and day selection.
 
+### Commit Generation Mechanics
+- Commits are generated every day between the specified start and end dates.
+- The number of commits per day depends on two factors:
+  1. Based on the commit chances for each day of the week, there is a chance to create commits or not. For example, a 50% chance means there is a 50% chance to create commits on that day.
+  2. The number of commits made will be a random number between the specified minimum and maximum commits per day.
+- Commit messages will be random strings.
+
 ## Contributing
 Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
 

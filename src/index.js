@@ -10,6 +10,7 @@ const version = packageJson.version;
 const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const WEEK_ENDS = ['Saturday', 'Sunday'];
 const COLORS = ['white', 'magenta', 'yellow', 'cyan'];
+console.log("[ 🤔 Debug ] | COLORS:", COLORS)
 
 const MARGIN_TOP = 3;
 const FIRST_MARGIN_TOP = MARGIN_TOP - 1;
@@ -341,7 +342,8 @@ async function init() {
 
         const git = simpleGit(repoPath);
         const commitGenerator = new CommitGenerator(git);
-        await commitGenerator.generateCommits(branchName, startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances);
+        const commitDates = commitGenerator.generateCommitDates(startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances);
+        await commitGenerator.createCommits(branchName, commitDates, 'Automated commit');
 
         screen.destroy();
     });
