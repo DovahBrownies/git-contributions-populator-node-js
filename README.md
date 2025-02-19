@@ -36,6 +36,8 @@ Just clone this here repository and run `npm i`.
 5. Follow the prompts to enter the branch name, date range, commit frequency, and day selection. be sure to choose the correct path to your local repository.
 6. Once the commits have been generated, just push your local repository to the origin.
 
+![image](https://github.com/user-attachments/assets/fc51b8ba-6d70-417f-8c5f-4f3a5f30748b)
+
 ### Commit Generation Mechanics
 - Commits are generated every day between the specified start and end dates.
 - The actual number of commits per day depends on two factors:
