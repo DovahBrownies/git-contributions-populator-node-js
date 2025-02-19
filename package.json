@@ -1,0 +1,21 @@
+{
+  "name": "commit-generator-app",
+  "version": "1.0.0",
+  "description": "A Node.js application that generates commits in a specified branch based on user-defined parameters.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "git",
+    "commit",
+    "generator"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "inquirer": "^8.2.4",
+    "simple-git": "^3.27.0"
+  }
+}
