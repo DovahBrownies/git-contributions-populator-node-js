@@ -10,7 +10,6 @@ const version = packageJson.version;
 const WEEK_DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday'];
 const WEEK_ENDS = ['Saturday', 'Sunday'];
 const COLORS = ['white', 'magenta', 'yellow', 'cyan'];
-console.log("[ 🤔 Debug ] | COLORS:", COLORS)
 
 const MARGIN_TOP = 3;
 const FIRST_MARGIN_TOP = MARGIN_TOP - 1;
@@ -19,14 +18,14 @@ const YESTERDAY = new Date(new Date().setDate(new Date().getDate() - 1)).toISOSt
 const FIRST_DAY_OF_YEAR = new Date(new Date().getFullYear(), 0, 1).toISOString().split('T')[0];
 
 const TITLE = `Commit Generator v${version}`;
-const SUBTITLE = '(Use UP/DOWN arrow keys or TAB to navigate)'
+const SUBTITLE = '(Use UP/DOWN arrow keys or TAB to navigate)';
 
 const DEFAULTS_VALUES = {
     MIN_COMMITS_PER_DAY: '1',
     MAX_COMMITS_PER_DAY: '5',
     WEEK_DAY_COMMIT_CHANGE: '100',
     WEEK_END_COMMIT_CHANGE: '0'
-}
+};
 
 const getMarginForRow = (row) => FIRST_MARGIN_TOP + MARGIN_TOP * row;
 const getBorderColor = (index) => ({ border: { fg: COLORS[index % COLORS.length] } });
@@ -36,10 +35,10 @@ const BASIC_STYLES = {
     HALF_WIDTH: { width: '49.5%' },
     STD_HEIGHT: { height: 3 },
     LARGE_HEIGHT: { height: 5 },
-    STD_BORDER: {  border: { type: 'line' } },
+    STD_BORDER: { border: { type: 'line' } },
     INPUT_ON_FOCUS: { inputOnFocus: true },
     HALF_WIDTH_SECOND_COL: { left: '50%' }
-}
+};
 
 const STYLES = {
     FULL_WIDTH_INPUT: {
@@ -54,7 +53,7 @@ const STYLES = {
         ...BASIC_STYLES.STD_BORDER,
         ...BASIC_STYLES.INPUT_ON_FOCUS
     }
-}
+};
 
 function isValidDate(dateString) {
     const regex = /^\d{4}-\d{2}-\d{2}$/;
@@ -75,7 +74,7 @@ async function createForm(screen, form, callback) {
         ...BASIC_STYLES.FULL_WIDTH,
         ...BASIC_STYLES.STD_BORDER,
         ...BASIC_STYLES.LARGE_HEIGHT,
-        content: TITLE + '\n' + SUBTITLE,
+        content: `${TITLE}\n${SUBTITLE}`,
         align: 'center',
         valign: 'middle',
         style: { fg: 'white', bg: 'blue' }
@@ -141,16 +140,16 @@ async function createForm(screen, form, callback) {
         const isWeekend = weekendIndex !== -1;
 
         const options = isWeekend
-        ? {
-            top: getMarginForRow(5) + weekendIndex * MARGIN_TOP,
-            value: DEFAULTS_VALUES.WEEK_END_COMMIT_CHANGE,
-            ...BASIC_STYLES.HALF_WIDTH,
-            ...BASIC_STYLES.HALF_WIDTH_SECOND_COL
-        }
-        : {
-            top: getMarginForRow(5) + index * MARGIN_TOP,
-            value: DEFAULTS_VALUES.WEEK_DAY_COMMIT_CHANGE,
-        };
+            ? {
+                top: getMarginForRow(5) + weekendIndex * MARGIN_TOP,
+                value: DEFAULTS_VALUES.WEEK_END_COMMIT_CHANGE,
+                ...BASIC_STYLES.HALF_WIDTH,
+                ...BASIC_STYLES.HALF_WIDTH_SECOND_COL
+            }
+            : {
+                top: getMarginForRow(5) + index * MARGIN_TOP,
+                value: DEFAULTS_VALUES.WEEK_DAY_COMMIT_CHANGE,
+            };
 
         return blessed.textbox({
             parent: form,
@@ -163,7 +162,7 @@ async function createForm(screen, form, callback) {
 
     const errorMessage = blessed.box({
         parent: form,
-        top: getMarginForRow(5) + WEEK_DAYS.length * MARGIN_TOP - 3,
+        top: getMarginForRow(5) + WEEK_DAYS.length * MARGIN_TOP,
         width: '99%',
         height: 3,
         content: '',
@@ -173,7 +172,7 @@ async function createForm(screen, form, callback) {
 
     const submitButton = blessed.button({
         parent: form,
-        top: getMarginForRow(5) + WEEK_DAYS.length * MARGIN_TOP,
+        top: getMarginForRow(6) + WEEK_DAYS.length * MARGIN_TOP,
         width: '49.5%',
         height: 3,
         content: 'Submit',
@@ -183,7 +182,7 @@ async function createForm(screen, form, callback) {
 
     const cancelButton = blessed.button({
         parent: form,
-        top: getMarginForRow(5) + WEEK_DAYS.length * MARGIN_TOP,
+        top: getMarginForRow(6) + WEEK_DAYS.length * MARGIN_TOP,
         left: '50%',
         width: '49.5%',
         height: 3,
@@ -342,10 +341,23 @@ async function init() {
 
         const git = simpleGit(repoPath);
         const commitGenerator = new CommitGenerator(git);
-        const commitDates = commitGenerator.generateCommitDates(startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances);
-        await commitGenerator.createCommits(branchName, commitDates, 'Automated commit');
+        await commitGenerator.createCommits(repoPath, branchName, startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances, 'Automated commit');
 
-        screen.destroy();
+        // Show a prompt to close the app
+        const closePrompt = blessed.message({
+            parent: screen,
+            top: 'center',
+            left: 'center',
+            width: '50%',
+            height: 'shrink',
+            label: 'Info',
+            border: { type: 'line' },
+            style: { border: { fg: 'blue' } }
+        });
+
+        closePrompt.display('Commits generated successfully. Press any key to exit.', 0, () => {
+            process.exit(0);
+        });
     });
 }
 

@@ -1,5 +1,6 @@
-const { generateDateRange } = require('./utils/dateUtils');
 const { randomBytes } = require('crypto');
+const fs = require('fs');
+const path = require('path');
 
 class CommitGenerator {
     constructor(simpleGit) {
@@ -11,33 +12,44 @@ class CommitGenerator {
         return branches.all.includes(branchName);
     }
 
-    generateCommitDates(startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances) {
-        const dates = [];
-        const dateRange = generateDateRange(startDate, endDate);
+    async createCommits(repoPath, branchName, startDate, endDate, minCommitsPerDay, maxCommitsPerDay, commitChances, commitMessage = 'Automated commit') {
+        console.log(`[CG] Checking out branch: ${branchName}`);
+        await this.git.checkout(branchName);
 
-        dateRange.forEach(date => {
-            const day = date.getDay();
+        const filePath = path.join(repoPath, 'commit-file.txt');
+
+        let currentDate = new Date(startDate);
+        const end = new Date(endDate);
+
+        while (currentDate <= end) {
+            const day = currentDate.getDay();
             const chance = commitChances[day];
 
             if (Math.random() * 100 < chance) {
                 const numCommits = Math.floor(Math.random() * (maxCommitsPerDay - minCommitsPerDay + 1)) + minCommitsPerDay;
                 for (let i = 0; i < numCommits; i++) {
-                    dates.push(new Date(date));
+                    const randomMessage = `${commitMessage} ${randomBytes(4).toString('hex')}`;
+                    const currentDateFormatted = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(currentDate);
+                    console.log(`[CG] ${randomMessage} on ${currentDateFormatted}`);
+                    
+                    // Erase the file content before modifying it
+                    fs.writeFileSync(filePath, '');
+
+                    // Modify the file content
+                    fs.writeFileSync(filePath, `Commit on ${currentDate.toISOString()} with message: ${randomMessage}\n`, { flag: 'a' });
+
+                    // Stage changes before committing
+                    await this.git.add(filePath);
+                    await this.git.commit(randomMessage, {
+                        '--date': currentDate.toISOString()
+                    });
                 }
             }
-        });
 
-        return dates;
-    }
-
-    async createCommits(branchName, commitDates, commitMessage) {
-        await this.git.checkout(branchName);
-        for (const date of commitDates) {
-            const randomMessage = commitMessage + ' ' + randomBytes(4).toString('hex');
-            await this.git.commit(randomMessage, {
-                '--date': date.toISOString()
-            });
+            currentDate.setDate(currentDate.getDate() + 1);
         }
+
+        console.log('[CG] Finished!');
     }
 }
 
