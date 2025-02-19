@@ -5,18 +5,18 @@ This app just lets you generate commits to populate your weak and sad contributi
 
 **Although there are a few very well written projects that do the same thing, I wanted to make something that was easier to use and, hopefully, I've achieved that with this project.**
 
-This is you:
+**This is you:**
 
 ![empty-chart](https://github.com/user-attachments/assets/cece8d5e-3ae9-46ca-9c85-90a3642093c3)
 
-This is the dev your employer tells you not to worry about:
+**This is the dev your employer tells you not to worry about:**
 
 ![full-chart](https://github.com/user-attachments/assets/6adcef20-8012-47a5-bec0-c88a548c436a)
 
 ## Other Inspirations
 Honestly, I pretty much made this because I've noticed that a lot of companies use your contribution chart as a serious metric of how good of a developer you are.
 
-That really isn't an accurate way of measuring productivity and skills. Some of the best developers I know go days without committing anything because they're providing consultation, coordinating teams, assiting other developers, and so on...
+That really isn't an accurate way of measuring productivity and skills. Some of the best developers I know go days without committing anything because they're providing consultation, coordinating teams, assisting other developers, and so on...
 
 And yet, if you're not pumping a bunch of commits, into GitHub, every day, some uninformed executive is going to think you absoilutely suck at your job.
 
@@ -55,4 +55,4 @@ If you think you're better than me and write better code than me, then show me w
 Seriously though; Contributions are welcome! Please open an issue or submit a pull request for any enhancements or bug fixes.
 
 ## License
-This project is licensed under the ISC License.
+This project is licensed under the ISC License. Essentially... Just do whatever you want.
