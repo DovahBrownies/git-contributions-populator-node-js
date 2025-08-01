@@ -26,23 +26,20 @@ And yet, if you're not pumping a bunch of commits, into GitHub, every day, some 
 Just clone this here repository and run `npm i`.
 
 ## Usage
-1. Create a new GitHub repository and create a local directory with a matching repo name.
-2. Copy the entire command block under "*…or create a new repository on the command line*" and execute the command in your local repository. If you run `git log` in this repo now, there should be a single commit.
-3. Open the terminal and navigate to this project directory.
-4. Run the application:
+1. Run the application:
    ```
    node src/index.js
    ```
-5. Follow the prompts to enter the branch name, date range, commit frequency, and day selection. be sure to choose the correct path to your local repository.
-6. Once the commits have been generated, just push your local repository to the origin.
+2. Follow the prompts to enter the repo path, branch name, date range, commit frequency, and day selection. Be sure to choose the correct path to your local repository.
+3. Once the commits have been generated, just push your local repository to the origin.
 
 ![image](https://github.com/user-attachments/assets/fc51b8ba-6d70-417f-8c5f-4f3a5f30748b)
 
 ### Commit Generation Mechanics
 - Commits are generated every day between the specified start and end dates.
 - The actual number of commits per day depends on two factors:
-  1. The set 'chance' for each day of the week. If you set Monday at 50%, then there's a 50% chance of a commit being generated on that day. All or nothing.
-  2. The number of commits made on that day will be a random number between the specified minimum and maximum commits per day.
+  1. The number of commits (`X`) made on each day will be a random number between the specified **minimum** and **maximum** commits per day. So if `min=1` and `max=5` then `X` will be any random number between 1 and 5.
+  2. The set 'chance' for each day of the week; If you set Monday at 50%, then there's a 50% chance of `X` number of commits being generated on that day. All or nothing (50% to generate nothing & 50% to generate `X` commits).
 - Commit messages will be random strings.
 
 ## Contributing
